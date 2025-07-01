@@ -5,7 +5,6 @@ import {
   AppBar, Toolbar, Typography, Button, Box, IconButton, Menu, MenuItem, Avatar, Divider
 } from '@mui/material';
 import Person from '@mui/icons-material/Person';
-// ---- NUEVO: Importamos el ícono del menú de hamburguesa ----
 import MenuIcon from '@mui/icons-material/Menu';
 
 function Navigation() {
@@ -13,12 +12,9 @@ function Navigation() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // --- NUEVO: Estado para el menú de administrador (sin cambios) ---
   const [anchorElUser, setAnchorElUser] = useState(null);
-  // --- NUEVO: Estado para el menú de navegación móvil ---
   const [anchorElNav, setAnchorElNav] = useState(null);
 
-  // --- NUEVO: Manejadores para el menú de navegación móvil ---
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -26,7 +22,6 @@ function Navigation() {
     setAnchorElNav(null);
   };
   
-  // --- NUEVO: Manejadores para el menú de usuario (admin) ---
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -54,9 +49,10 @@ function Navigation() {
   ];
 
   return (
-    <AppBar position="static" color="default" elevation={1}>
+    // ---- MODIFICACIÓN CLAVE: Cambiamos position="static" por position="sticky" ----
+    <AppBar position="sticky" color="default" elevation={1} sx={{ top: 0 }}>
       <Toolbar>
-        {/* ---- NUEVO: Contenedor para el menú móvil ---- */}
+        {/* ---- Menú móvil ---- */}
         <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
           <IconButton
             size="large"
@@ -92,8 +88,8 @@ function Navigation() {
           component={RouterLink}
           to="/"
           sx={{
-            flexGrow: { xs: 1, md: 0 }, // El logo toma menos espacio en desktop
-            mr: { md: 2 }, // Margen en desktop
+            flexGrow: { xs: 1, md: 0 },
+            mr: { md: 2 },
             textDecoration: 'none',
             color: 'inherit'
           }}
@@ -101,7 +97,7 @@ function Navigation() {
           Los Pinos
         </Typography>
 
-        {/* ---- Links para la vista de escritorio (sin cambios de lógica) ---- */}
+        {/* ---- Links para la vista de escritorio ---- */}
         <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
           {publicLinks.map((link) => (
             <Button
@@ -152,6 +148,8 @@ function Navigation() {
                         <Divider />
                         <MenuItem onClick={() => handleNavigate('/admin/testimonials')}>Admin: Testimonios</MenuItem>
                         <MenuItem onClick={() => handleNavigate('/admin/users')}>Admin: Usuarios</MenuItem>
+                        <MenuItem onClick={() => handleNavigate('/admin/tables')}>Admin: Mesas</MenuItem>
+                        <MenuItem onClick={() => handleNavigate('/admin/tables/bulk-edit')}>Edición Rápida de Mesas</MenuItem>
                     </div>
                 )}
                 

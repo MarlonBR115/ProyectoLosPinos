@@ -1,7 +1,10 @@
+// src/components/ReservationForm.jsx
+
 import React, { useState, useEffect } from 'react';
 import { createReservation, getAllTables } from '../api/services';
 import { Box, TextField, Button, Typography, CircularProgress, Alert } from '@mui/material';
-import TableSelector from './TableSelector';
+// ----> 1. Importa el nuevo componente de mapa
+import InteractiveTableMap from './InteractiveTableMap';
 import { useNavigate } from 'react-router-dom';
 
 function ReservationForm() {
@@ -17,11 +20,9 @@ function ReservationForm() {
   const [selectedTableId, setSelectedTableId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
-  // Carga todas las mesas una sola vez, cuando el componente se monta
   useEffect(() => {
     getAllTables()
       .then(response => {
@@ -32,7 +33,7 @@ function ReservationForm() {
         setErrorMessage("No se pudieron cargar las mesas. Intente refrescar la página.");
       })
       .finally(() => setLoading(false));
-  }, []); // El array vacío asegura que solo se ejecute una vez al inicio
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -46,7 +47,6 @@ function ReservationForm() {
       return;
     }
     setIsSubmitting(true);
-    setSuccessMessage('');
     setErrorMessage('');
     
     const formattedDateTime = formData.reservation_datetime.replace('T', ' ') + ':00';
@@ -71,7 +71,8 @@ function ReservationForm() {
 
   return (
     <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-      <TableSelector 
+      {/* ----> 2. Reemplaza TableSelector con InteractiveTableMap */}
+      <InteractiveTableMap 
         tables={tables}
         selectedTableId={selectedTableId}
         onSelectTable={setSelectedTableId}

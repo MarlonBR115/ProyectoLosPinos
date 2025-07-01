@@ -23,6 +23,8 @@ import AdminMenuPage from './pages/AdminMenuPage';
 import AdminSuggestionsPage from './pages/AdminSuggestionsPage';
 import AdminTestimonialsPage from './pages/AdminTestimonialsPage';
 import AdminUsersPage from './pages/AdminUsersPage';
+import AdminTablesPage from './pages/AdminTablesPage';
+import AdminTablesBulkPage from './pages/AdminTablesBulkPage';
 
 // Componente Wrapper para las rutas (sin cambios)
 const AppRoutes = () => {
@@ -47,6 +49,8 @@ const AppRoutes = () => {
           <Route path="/admin/testimonials" element={<AdminTestimonialsPage />} />
           <Route path="/admin/users" element={<AdminUsersPage />} />
           <Route path="/admin" element={<Navigate to="/admin/reservations" replace />} />
+          <Route path="/admin/tables/bulk-edit" element={<AdminTablesBulkPage />} />
+          <Route path="/admin/tables" element={<AdminTablesPage />} />
         </Route>
       </Routes>
     </AnimatePresence>

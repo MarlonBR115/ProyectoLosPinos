@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\Admin\MenuItemController as AdminMenuItemController
 use App\Http\Controllers\Api\Admin\SuggestionController as AdminSuggestionController;
 use App\Http\Controllers\Api\Admin\TestimonialController as AdminTestimonialController;
 use App\Http\Controllers\Api\Admin\UserController;
+use App\Http\Controllers\Api\TableController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,5 +52,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('role:admin')->group(function () {
         Route::apiResource('/admin/testimonials', AdminTestimonialController::class)->except(['store', 'show']);
         Route::apiResource('/admin/users', UserController::class);
+        Route::post('/admin/tables/bulk-update', [TableController::class, 'bulkUpdate']);
+        Route::post('/admin/tables', [TableController::class, 'store']);
+        Route::put('/admin/tables/{table}', [TableController::class, 'update']);
+        Route::delete('/admin/tables/{table}', [TableController::class, 'destroy']);
     });
 });
