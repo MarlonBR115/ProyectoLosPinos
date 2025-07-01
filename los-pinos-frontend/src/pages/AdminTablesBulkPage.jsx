@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Button, CircularProgress, Alert, Paper, TextField, Grid } from '@mui/material';
 import { getAllTables, bulkUpdateTables } from '../api/services';
-import { Save } from '@mui/icons-material';
+import Save from '@mui/icons-material/Save';
 
 function AdminTablesBulkPage() {
   const [tables, setTables] = useState([]);

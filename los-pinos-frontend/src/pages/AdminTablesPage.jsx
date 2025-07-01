@@ -4,7 +4,9 @@ import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton,
   Dialog, DialogActions, DialogContent, DialogTitle, TextField, Select, MenuItem, FormControl, InputLabel
 } from '@mui/material';
-import { Edit, Delete, Add } from '@mui/icons-material';
+import Edit from '@mui/icons-material/Edit';
+import Delete from '@mui/icons-material/Delete';
+import Add from '@mui/icons-material/Add';
 import { getAllTables, createTable, updateTable, deleteTable } from '../api/services';
 
 function AdminTablesPage() {
