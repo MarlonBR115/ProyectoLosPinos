@@ -4,10 +4,11 @@ import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton,
   Dialog, DialogActions, DialogContent, DialogTitle, TextField, Select, MenuItem, FormControl, InputLabel
 } from '@mui/material';
-import Edit from '@mui/icons-material/Edit';
-import Delete from '@mui/icons-material/Delete';
-import Add from '@mui/icons-material/Add';
+import { Edit, Delete, Add } from '@mui/icons-material';
 import { getAllTables, createTable, updateTable, deleteTable } from '../api/services';
+
+// Estado inicial para una mesa nueva, fuera del componente para evitar re-creaciones
+const initialTableState = { name: '', capacity: 4, location: 'salón' };
 
 function AdminTablesPage() {
   const [tables, setTables] = useState([]);
@@ -15,8 +16,7 @@ function AdminTablesPage() {
   const [error, setError] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  // --- Estado inicial cambiado para usar 'name' ---
-  const [currentTable, setCurrentTable] = useState({ name: '', capacity: 4, location: 'salón' });
+  const [currentTable, setCurrentTable] = useState(initialTableState);
 
   useEffect(() => {
     fetchTables();
@@ -26,6 +26,11 @@ function AdminTablesPage() {
     try {
       setLoading(true);
       const response = await getAllTables();
+      const sortedTables = response.data.sort((a, b) => {
+        const numA = parseInt(a.name.split(' ')[1] || '0', 10);
+        const numB = parseInt(b.name.split(' ')[1] || '0', 10);
+        return numA - numB;
+      });
       setTables(response.data);
     } catch (err) {
       setError('No se pudieron cargar las mesas.');
@@ -41,9 +46,8 @@ function AdminTablesPage() {
       setCurrentTable({ ...table });
     } else {
       setIsEditing(false);
-      // Sugerimos el siguiente número de mesa en el nombre
-      const nextNumber = tables.length > 0 ? Math.max(...tables.map(t => t.id)) + 1 : 1;
-      setCurrentTable({ name: `Mesa ${nextNumber}`, capacity: 4, location: 'salón' });
+      const nextNumber = tables.length > 0 ? Math.max(...tables.map(t => parseInt(t.name.split(' ')[1]) || 0)) + 1 : 1;
+      setCurrentTable({ ...initialTableState, name: `Mesa ${nextNumber}` });
     }
     setDialogOpen(true);
   };
@@ -56,19 +60,31 @@ function AdminTablesPage() {
   };
 
   const handleSubmit = async () => {
+    // --- PRUEBA CLAVE: Para ver si la función se está ejecutando ---
+    console.log("Se hizo clic en el botón de Guardar/Crear. Datos actuales:", currentTable);
+    
+    setError('');
+
     try {
-      // Preparamos los datos para enviar. Excluimos el ID al crear.
-      const { id, ...dataToSend } = currentTable;
-      
+      const dataToSend = {
+        name: currentTable.name,
+        capacity: parseInt(currentTable.capacity, 10), // Aseguramos que sea un número
+        location: currentTable.location,
+      };
+
       if (isEditing) {
-        await updateTable(id, dataToSend);
+        await updateTable(currentTable.id, dataToSend);
       } else {
         await createTable(dataToSend);
       }
-      fetchTables();
+
+      await fetchTables(); // Esperamos a que se actualicen las mesas
       handleCloseDialog();
+
     } catch (err) {
-      setError(err.response?.data?.message || `Error al ${isEditing ? 'actualizar' : 'crear'} la mesa.`);
+      console.error("Error al enviar el formulario:", err);
+      const message = err.response?.data?.message || err.message || `Error al ${isEditing ? 'actualizar' : 'crear'} la mesa.`;
+      setError(message);
     }
   };
 
@@ -120,12 +136,13 @@ function AdminTablesPage() {
         </Table>
       </TableContainer>
 
-      {/* --- Dialogo para Crear/Editar (modificado) --- */}
-      <Dialog open={dialogOpen} onClose={handleCloseDialog}>
+      {/* Dialogo para Crear/Editar */}
+      <Dialog open={dialogOpen} onClose={handleCloseDialog} >
         <DialogTitle>{isEditing ? `Editar ${currentTable.name}` : 'Añadir Nueva Mesa'}</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
+            required
             margin="dense"
             name="name"
             label="Nombre / Número de Mesa"
@@ -136,6 +153,7 @@ function AdminTablesPage() {
             onChange={handleInputChange}
           />
           <TextField
+            required
             margin="dense"
             name="capacity"
             label="Capacidad (personas)"
@@ -145,7 +163,7 @@ function AdminTablesPage() {
             value={currentTable.capacity}
             onChange={handleInputChange}
           />
-          <FormControl fullWidth margin="dense" variant="standard">
+          <FormControl fullWidth required margin="dense" variant="standard">
             <InputLabel>Ubicación</InputLabel>
             <Select
               name="location"

@@ -49,19 +49,11 @@ function Navigation() {
   ];
 
   return (
-    // ---- MODIFICACIÓN CLAVE: Cambiamos position="static" por position="sticky" ----
     <AppBar position="sticky" color="default" elevation={1} sx={{ top: 0 }}>
       <Toolbar>
-        {/* ---- Menú móvil ---- */}
+        {/* --- Menú Móvil --- */}
         <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-          <IconButton
-            size="large"
-            aria-label="menu de navegación"
-            aria-controls="menu-appbar"
-            aria-haspopup="true"
-            onClick={handleOpenNavMenu}
-            color="inherit"
-          >
+          <IconButton size="large" aria-label="menu de navegación" onClick={handleOpenNavMenu} color="inherit">
             <MenuIcon />
           </IconButton>
           <Menu
@@ -83,21 +75,11 @@ function Navigation() {
         </Box>
 
         {/* --- Logo/Título del sitio --- */}
-        <Typography
-          variant="h6"
-          component={RouterLink}
-          to="/"
-          sx={{
-            flexGrow: { xs: 1, md: 0 },
-            mr: { md: 2 },
-            textDecoration: 'none',
-            color: 'inherit'
-          }}
-        >
+        <Typography variant="h6" component={RouterLink} to="/" sx={{ flexGrow: { xs: 1, md: 0 }, mr: { md: 2 }, textDecoration: 'none', color: 'inherit' }}>
           Los Pinos
         </Typography>
 
-        {/* ---- Links para la vista de escritorio ---- */}
+        {/* --- Links para la vista de escritorio --- */}
         <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
           {publicLinks.map((link) => (
             <Button
@@ -114,15 +96,9 @@ function Navigation() {
           ))}
         </Box>
 
-        {/* --- Botones de la derecha (Reservar y Login/Admin) --- */}
+        {/* --- Botones de la derecha --- */}
         <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center' }}>
-          <Button
-              component={RouterLink}
-              to="/reservations"
-              variant="contained"
-              color="secondary"
-              sx={{ ml: { xs: 1, md: 2 } }}
-          >
+          <Button component={RouterLink} to="/reservations" variant="contained" color="secondary" sx={{ ml: { xs: 1, md: 2 } }}>
               Reservar
           </Button>
 
@@ -139,18 +115,22 @@ function Navigation() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
+                {/* --- Enlaces para TODOS los usuarios logueados (editores y admins) --- */}
                 <MenuItem onClick={() => handleNavigate('/admin/reservations')}>Admin: Reservas</MenuItem>
                 <MenuItem onClick={() => handleNavigate('/admin/menu')}>Admin: Menú</MenuItem>
                 <MenuItem onClick={() => handleNavigate('/admin/suggestions')}>Admin: Sugerencias</MenuItem>
 
+                {/* --- SECCIÓN SOLO PARA ADMINISTRADORES --- */}
+                {/* Esta es la forma más segura de hacer la comprobación */}
                 {user && user.role === 'admin' && (
-                    <div role="none">
-                        <Divider />
-                        <MenuItem onClick={() => handleNavigate('/admin/testimonials')}>Admin: Testimonios</MenuItem>
-                        <MenuItem onClick={() => handleNavigate('/admin/users')}>Admin: Usuarios</MenuItem>
-                        <MenuItem onClick={() => handleNavigate('/admin/tables')}>Admin: Mesas</MenuItem>
-                        <MenuItem onClick={() => handleNavigate('/admin/tables/bulk-edit')}>Edición Rápida de Mesas</MenuItem>
-                    </div>
+                  // Usamos un Fragmento (<></>) para agrupar los elementos sin añadir un div extra
+                  <>
+                    <Divider />
+                    <MenuItem onClick={() => handleNavigate('/admin/testimonials')}>Admin: Testimonios</MenuItem>
+                    <MenuItem onClick={() => handleNavigate('/admin/users')}>Admin: Usuarios</MenuItem>
+                    <MenuItem onClick={() => handleNavigate('/admin/tables')}>Admin: Mesas</MenuItem>
+                    <MenuItem onClick={() => handleNavigate('/admin/tables/bulk-edit')}>Edición Rápida de Mesas</MenuItem>
+                  </>
                 )}
                 
                 <Divider />

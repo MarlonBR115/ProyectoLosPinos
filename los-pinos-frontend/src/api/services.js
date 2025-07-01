@@ -48,13 +48,21 @@ export const getAllTables = () => {
   return apiClient.get('/tables');
 };
 
-export const bulkUpdateTables = (tablesData) => api.post('/admin/tables/bulk-update', tablesData);
+export const createTable = (tableData) => {
+  return apiClient.post('/admin/tables', tableData);
+};
 
-export const createTable = (tableData) => api.post('/admin/tables', tableData);
+export const updateTable = (id, tableData) => {
+  return apiClient.put(`/admin/tables/${id}`, tableData);
+};
 
-export const updateTable = (id, tableData) => api.put(`/admin/tables/${id}`, tableData);
+export const deleteTable = (id) => {
+  return apiClient.delete(`/admin/tables/${id}`);
+};
 
-export const deleteTable = (id) => api.delete(`/admin/tables/${id}`);
+export const bulkUpdateTables = (tablesData) => {
+  return apiClient.post('/admin/tables/bulk-update', tablesData);
+};
 
 export const getActiveSuggestions = () => {
   return apiClient.get('/suggestions/active');

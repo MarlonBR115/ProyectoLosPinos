@@ -18,6 +18,11 @@ function AdminTablesBulkPage() {
     try {
       setLoading(true);
       const response = await getAllTables();
+      const sortedTables = response.data.sort((a, b) => {
+        const numA = parseInt(a.name.split(' ')[1] || '0', 10);
+        const numB = parseInt(b.name.split(' ')[1] || '0', 10);
+        return numA - numB;
+      });
       setTables(response.data);
     } catch (err) {
       setError('No se pudieron cargar las mesas.');

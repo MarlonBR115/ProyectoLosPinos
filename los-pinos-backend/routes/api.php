@@ -13,7 +13,7 @@ use App\Http\Controllers\Api\Admin\MenuItemController as AdminMenuItemController
 use App\Http\Controllers\Api\Admin\SuggestionController as AdminSuggestionController;
 use App\Http\Controllers\Api\Admin\TestimonialController as AdminTestimonialController;
 use App\Http\Controllers\Api\Admin\UserController;
-use App\Http\Controllers\Api\TableController;
+use App\Http\Controllers\Api\Admin\TableController;
 
 /*
 |--------------------------------------------------------------------------
